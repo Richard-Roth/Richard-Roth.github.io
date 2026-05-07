@@ -1,25 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="favicon.ico?" type="image/x-icon">  <!-- Add this line -->
+<link rel="icon" href="favicon.ico?" type="image/x-icon">
 <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 <style>
-sup {
-    line-height: 0;
-    font-size: 0.83em;
-    vertical-align: super;
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #555555;
+  --link: #0066cc;
+  --surface: #f5f5f5;
+  --border: #cccccc;
+  --details-marker: #888888;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1a1a;
+    --text: #e8e8e8;
+    --muted: #aaaaaa;
+    --link: #6aabff;
+    --surface: #252525;
+    --border: #444444;
+    --details-marker: #888888;
+  }
+}
+
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --text: #e8e8e8;
+  --muted: #aaaaaa;
+  --link: #6aabff;
+  --surface: #252525;
+  --border: #444444;
+  --details-marker: #888888;
+}
+
+[data-theme="light"] {
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #555555;
+  --link: #0066cc;
+  --surface: #f5f5f5;
+  --border: #cccccc;
+  --details-marker: #888888;
+}
+
+sup {
+  line-height: 0;
+  font-size: 0.83em;
+  vertical-align: super;
+}
+
 * {
   box-sizing: border-box;
 }
+
 body {
-  background-color: #fff;
-  padding:50px;
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 50px;
   font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  color:#000000;
-  font-weight:400;
+  font-weight: 400;
   margin: 0;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+a {
+  color: var(--link);
 }
 
 .container {
@@ -27,10 +77,35 @@ body {
   margin: 0 auto;
 }
 
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
 h2.page-title {
-  margin-left: 10px; /* same as .left column padding */
-  font-size:28px;
+  margin: 0 0 0 10px;
+  font-size: 28px;
   font-weight: 500;
+  color: var(--text);
+}
+
+.dark-toggle {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  font-family: inherit;
+}
+
+.dark-toggle:hover {
+  color: var(--text);
+  border-color: var(--text);
 }
 
 .row {
@@ -38,21 +113,58 @@ h2.page-title {
   flex-wrap: wrap;
 }
 
-/* Set column widths */
 .left {
   width: 20%;
   padding: 10px;
 }
+
 .middle {
-  flex: 1; /* take up remaining space */
+  flex: 1;
   padding: 10px;
 }
+
 .right {
   width: 20%;
   padding: 10px;
 }
 
-/* Responsive layout - stack on small screens */
+details {
+  margin-bottom: 6px;
+}
+
+summary {
+  padding: 3px 0 3px 18px;
+  cursor: pointer;
+  position: relative;
+  list-style: none;
+  color: var(--text);
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--details-marker);
+  font-size: 16px;
+  line-height: 1.2;
+  transition: transform 0.15s;
+}
+
+details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.abstract {
+  padding: 6px 0 8px 18px;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 @media screen and (max-width: 800px) {
   .left, .middle, .right {
     width: 100%;
@@ -61,81 +173,100 @@ h2.page-title {
 </style>
 <title>Richard Roth</title>
 </head>
-<body> 
+<body>
 <div class="container">
-  <h2 class="page-title">Richard Roth</h2>
+  <div class="title-bar">
+    <h2 class="page-title">Richard Roth</h2>
+    <button class="dark-toggle" id="dark-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">☾ Dark mode</button>
+  </div>
 
   <div class="row">
     <div class="left">
       <h2><span class="lnr lnr-home"></span></h2>
-      <p>I am a philosophy PhD student at <a href="https://as.nyu.edu/departments/philosophy.html" target=_blank>NYU</a> working on epistemology, language, and decision theory. You can email me at rhr8837@nyu.edu, and find a CV <a href="Richard-Roth-CV.pdf" target=_blank>here</a>. </p> 
-<p>Next year, I'll be a postdoc at <a href="https://philosophy.mit.edu/" target=_blank>MIT</a>, and then an assistant professor at <a href="https://philosophy.utoronto.ca/" target=_blank>UofT</a>.</p> 
+      <p>I am a philosophy PhD student at <a href="https://as.nyu.edu/departments/philosophy.html" target="_blank">NYU</a> working on epistemology, language, and decision theory. You can email me at rhr8837@nyu.edu, and find a CV <a href="Richard-Roth-CV.pdf" target="_blank">here</a>.</p>
+      <p>Next year, I'll be a postdoc at <a href="https://philosophy.mit.edu/" target="_blank">MIT</a>, and then an assistant professor at <a href="https://philosophy.utoronto.ca/" target="_blank">UofT</a>.</p>
     </div>
-  <div class="middle">
-    <h2><span class="lnr lnr-cog"></span></h2>
-    <p><details class="details-example">
-    <summary>Iteration and Preservation. Conditionally accepted at <i>Mind</i>. <a href="Iteration-and-Preservation.pdf" target=_blank>Manuscript</a>.</summary>
-    <ul><div style="font-size: 14">
-        How are your opinions on a supposition related to your unconditional opinions? One simple answer is <i>Material Coincidence</i>: when you are not sure that not <i>q</i>, you are sure that <i>p</i> on the supposition that <i>q</i> just in case you are sure that either not <i>q</i> or <i>p</i> (&#x25c7;<i>q</i> &#8835; (&#x25a1;<sup><i>q</i></sup><i>p</i> &#8801; &#x25a1;(<i>q</i> &#8835; <i>p</i>))). I give a novel argument against <i>Material Coincidence</i>: given weak side-conditions, it entails the implausible claim that being sure implies being sure that you are sure (&#x25a1;<i>p</i> &#8835; &#x25a1;&#x25a1;<i>p</i>). </div>
-    </ul>
-</details>
 
-<details class="details-example">
-    <summary>A paper on assertions of higher-order ignorance. <a href="Known-higher-order-ignorance.pdf" target=_blank>Manuscript</a>.</summary>
-    <ul><div style="font-size: 14">
-        You are <i>higher-order ignorant</i> when you fail to know whether you know something. I show that ordinary people sometimes say that they are higher-order ignorant, and use this to undermine the claim that knowing implies knowing that one knows (<i>KK:</i> &#x25a1;<i>p</i> &#8835; &#x25a1;&#x25a1;<i>p</i>), and the thought that taking seriously the possibility that one does not know something raises the standards for the application of the word “know” to the point where one fails to satisfy them. </div>
-    </ul>
-</details>
+    <div class="middle">
+      <h2><span class="lnr lnr-cog"></span></h2>
 
-<details class="details-example">
-    <summary>A paper on reliabilism and defeat, with <a href="https://sites.google.com/view/barluzon/" target=_blank>Bar Luzon</a>. Forthcoming in <i>Oxford Studies in Epistemology</i>.</summary>
-    <ul><div style="font-size: 14">
-        According to reliabilism, whether a belief is justified, or amounts to knowledge, depends on whether similar beliefs are, or would be, true. We consider familiar arguments that reliabilism is incompatible with defeat, and show how reliabilists can respond to them by understanding similarity in a flexible way. This alternative conception of similarity also allows reliabilists to provide a unified treatment of defeat, including higher-order defeat. However, it also over-generates justification when you learn but ignore excellent evidence for an otherwise unjustified belief. We argue that this problem is much harder, and calls for a structural revision of reliabilism. We propose what we take to be the best such revision. 
-</div>
-    </ul>
-</details>
+      <details>
+        <summary>Iteration and Preservation. Conditionally accepted at <i>Mind</i>. <a href="Iteration-and-Preservation.pdf" target="_blank">Manuscript</a>.</summary>
+        <div class="abstract">
+          How are your opinions on a supposition related to your unconditional opinions? One simple answer is <i>Material Coincidence</i>: when you are not sure that not <i>q</i>, you are sure that <i>p</i> on the supposition that <i>q</i> just in case you are sure that either not <i>q</i> or <i>p</i> (&#x25c7;<i>q</i> &#8835; (&#x25a1;<sup><i>q</i></sup><i>p</i> &#8801; &#x25a1;(<i>q</i> &#8835; <i>p</i>))). I give a novel argument against <i>Material Coincidence</i>: given weak side-conditions, it entails the implausible claim that being sure implies being sure that you are sure (&#x25a1;<i>p</i> &#8835; &#x25a1;&#x25a1;<i>p</i>).
+        </div>
+      </details>
 
-<details class="details-example">
-    <summary>A paper on accuracy and introspection.</summary>
-    <ul><div style="font-size: 14">
-        This paper is about two putative epistemic ideals, Probabilism and Introspection. Probabilism requires having credences that respect the axioms of probability; Introspection requires always being certain what your credences are. I argue that two well-known arguments for Probabilism, once carefully analyzed, either fail or generalize to Introspection. I take this to undermine the arguments. I then suggest that Probabilism is a rational ideal, but Introspection is not, because Probabilism is robust — still worth approximating under noise — but Introspection is fragile — only good to realize perfectly.
-</div>
-    </ul>
-</details>
+      <details>
+        <summary>A paper on assertions of higher-order ignorance. <a href="Known-higher-order-ignorance.pdf" target="_blank">Manuscript</a>.</summary>
+        <div class="abstract">
+          You are <i>higher-order ignorant</i> when you fail to know whether you know something. I show that ordinary people sometimes say that they are higher-order ignorant, and use this to undermine the claim that knowing implies knowing that one knows (<i>KK:</i> &#x25a1;<i>p</i> &#8835; &#x25a1;&#x25a1;<i>p</i>), and the thought that taking seriously the possibility that one does not know something raises the standards for the application of the word "know" to the point where one fails to satisfy them.
+        </div>
+      </details>
 
+      <details>
+        <summary>A paper on reliabilism and defeat, with <a href="https://sites.google.com/view/barluzon/" target="_blank">Bar Luzon</a>. Forthcoming in <i>Oxford Studies in Epistemology</i>.</summary>
+        <div class="abstract">
+          According to reliabilism, whether a belief is justified, or amounts to knowledge, depends on whether similar beliefs are, or would be, true. We consider familiar arguments that reliabilism is incompatible with defeat, and show how reliabilists can respond to them by understanding similarity in a flexible way. This alternative conception of similarity also allows reliabilists to provide a unified treatment of defeat, including higher-order defeat. However, it also over-generates justification when you learn but ignore excellent evidence for an otherwise unjustified belief. We argue that this problem is much harder, and calls for a structural revision of reliabilism. We propose what we take to be the best such revision.
+        </div>
+      </details>
 
-<details class="details-example">
-    <summary>A paper on accuracy and epistemic modals, with <a href="https://www.mikaylakelley.com/" target=_blank>Mikayla Kelley</a>, <a href="https://www.calummcnamara.org/" target=_blank>Calum McNamara</a>, and <a href="https://sites.google.com/berkeley.edu/xueyin-snow-zhang" target=_blank>Snow Zhang</a>.</summary>
-    <ul><div style="font-size: 14">
-        According to <i>accuracy-first epistemology</i>, epistemic norms for credences can be derived from considerations of <i>accuracy</i>, or “closeness to the truth”. The standard way of precisifying it leads to collapse results in cases involving epistemic modals. In particular, the accuracy-first view seems to say that you should assign the <i>same</i> credence to sentences A, ‘might A’, and ‘must A’. If you don't, then your credences are <i>accuracy-dominanted</i>, in the sense that there's some other system of credences that's more accurate than yours, no matter how the world turns out to be. We propose a modification of the accuracy-first framework which avoids such collapse results. All of the arguments which made the framework seem attractive in the first place are preserved, and some new desirable constraints derived, such as that you should assign zero credence to so-called <i>epistemic contradictions</i> &mdash; i.e., sentences of the form ‘A and might not A’ (or similar).
-</div>
-    </ul>
-</details>
+      <details>
+        <summary>A paper on accuracy and introspection.</summary>
+        <div class="abstract">
+          This paper is about two putative epistemic ideals, Probabilism and Introspection. Probabilism requires having credences that respect the axioms of probability; Introspection requires always being certain what your credences are. I argue that two well-known arguments for Probabilism, once carefully analyzed, either fail or generalize to Introspection. I take this to undermine the arguments. I then suggest that Probabilism is a rational ideal, but Introspection is not, because Probabilism is robust — still worth approximating under noise — but Introspection is fragile — only good to realize perfectly.
+        </div>
+      </details>
 
-<details class="details-example">
-    <summary>No epistemic discounts.</summary>
-    <ul><div style="font-size: 14">
-        I explore the combination of epistemic decision theory, which says that we must do what's best in expectation given our knowledge, with optimistic theories of knowledge, according to which we can know all sorts of things that aren't certain on our evidence. I argue that plausible optimistic theories of knowledge make knowledge defeasible and “know” heavily context-dependent in ways that cause problems for epistemic decision theory. 
-</div>
-    </ul>
-</details>
+      <details>
+        <summary>A paper on accuracy and epistemic modals, with <a href="https://www.mikaylakelley.com/" target="_blank">Mikayla Kelley</a>, <a href="https://www.calummcnamara.org/" target="_blank">Calum McNamara</a>, and <a href="https://sites.google.com/berkeley.edu/xueyin-snow-zhang" target="_blank">Snow Zhang</a>.</summary>
+        <div class="abstract">
+          According to <i>accuracy-first epistemology</i>, epistemic norms for credences can be derived from considerations of <i>accuracy</i>, or "closeness to the truth". The standard way of precisifying it leads to collapse results in cases involving epistemic modals. In particular, the accuracy-first view seems to say that you should assign the <i>same</i> credence to sentences A, 'might A', and 'must A'. If you don't, then your credences are <i>accuracy-dominated</i>, in the sense that there's some other system of credences that's more accurate than yours, no matter how the world turns out to be. We propose a modification of the accuracy-first framework which avoids such collapse results. All of the arguments which made the framework seem attractive in the first place are preserved, and some new desirable constraints derived, such as that you should assign zero credence to so-called <i>epistemic contradictions</i> &mdash; i.e., sentences of the form 'A and might not A' (or similar).
+        </div>
+      </details>
 
-<details class="details-example">
-    <summary>Counterfactualism for Belief and Desire. <a href="Counterfactualism-Handout.pdf" target=_blank>Handout</a>.</summary>
-    <ul><div style="font-size: 14">
-        I defend Counterfactualism: You should believe what it would be best to believe, and desire what it would be best to desire. This may sound platitudinous, but it conflicts with influential alternatives — such as the view that you should believe what is in fact true (or likely true), and desire what is in fact good (or expectedly good). Drawing on self-undermining beliefs and desires, I show that Counterfactualism comes apart from and improves on these competing views. Its signature virtue is normative invariance: whether you should believe or desire something does not depend on whether you in fact believe or desire it. 
+      <details>
+        <summary>No epistemic discounts.</summary>
+        <div class="abstract">
+          I explore the combination of epistemic decision theory, which says that we must do what's best in expectation given our knowledge, with optimistic theories of knowledge, according to which we can know all sorts of things that aren't certain on our evidence. I argue that plausible optimistic theories of knowledge make knowledge defeasible and "know" heavily context-dependent in ways that cause problems for epistemic decision theory.
+        </div>
+      </details>
 
-A common objection to views like Counterfactualism is that they supposedly license “epistemic bribes”, implying that you should believe an obvious falsehood when doing so would cause enough true beliefs. I argue that Counterfactualists can reject such bribes if they deny that an attitude is made better by causing other good attitudes. I conclude by sketching two implications of Counterfactualism, for Permissivism and for the fittingness theory of value. 
-</div>
-    </ul>
-</details>
-</p>
-  </div>
+      <details>
+        <summary>Counterfactualism for Belief and Desire. <a href="Counterfactualism-Handout.pdf" target="_blank">Handout</a>.</summary>
+        <div class="abstract">
+          I defend Counterfactualism: You should believe what it would be best to believe, and desire what it would be best to desire. This may sound platitudinous, but it conflicts with influential alternatives — such as the view that you should believe what is in fact true (or likely true), and desire what is in fact good (or expectedly good). Drawing on self-undermining beliefs and desires, I show that Counterfactualism comes apart from and improves on these competing views. Its signature virtue is normative invariance: whether you should believe or desire something does not depend on whether you in fact believe or desire it.
+          <br><br>
+          A common objection to views like Counterfactualism is that they supposedly license "epistemic bribes", implying that you should believe an obvious falsehood when doing so would cause enough true beliefs. I argue that Counterfactualists can reject such bribes if they deny that an attitude is made better by causing other good attitudes. I conclude by sketching two implications of Counterfactualism, for Permissivism and for the fittingness theory of value.
+        </div>
+      </details>
+
+    </div>
+
     <div class="right">
       <h2><span class="lnr lnr-smile"></span></h2>
       <p><img alt="Photo of Richard" src="photo.jpg" style="width: 100%; max-width: 50vw; height: auto; display: block; margin-left: 0;"></p>
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    var btn = document.getElementById('dark-toggle');
+    var current = 'light';
+
+    function apply(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      btn.textContent = theme === 'dark' ? '☀ Light mode' : '☾ Dark mode';
+      current = theme;
+    }
+
+    apply(current);
+
+    window.toggleTheme = function () {
+      apply(current === 'dark' ? 'light' : 'dark');
+    };
+  })();
+</script>
 </body>
 </html>
